@@ -1,0 +1,13 @@
+{
+    "oauth": "put_your_github_oauth_token_here",
+    "database": {
+	    "drivername": "postgres",
+	    "host": "localhost",
+	    "port": "5432",
+	    "username": "ghstats",
+	    "password": "ghstats",
+	    "database": "ghstats"
+	},
+    "repo_owner": "WISDEM",
+    "repo_name": "FLORIS"
+}

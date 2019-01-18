@@ -1,0 +1,7 @@
+# Ignore authentication.json files
+authentication*.json
+
+*__pycache__*
+
+# Ignore ipython checkpoints
+*checkpoint.ipynb
