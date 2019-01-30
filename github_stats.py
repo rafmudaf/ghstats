@@ -5,7 +5,7 @@ import requests
 
 class GitHubRequest():
     def __init__(self):
-        with open("template_authentication.json") as f:
+        with open("authentication.json") as f:
             auth = json.load(f)
         self.url = "https://api.github.com"
         self.headers = {
