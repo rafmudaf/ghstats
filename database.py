@@ -118,5 +118,7 @@ class Database(object):
 
     def getTotals(self):
         print("GETTING TOTAL UNIQUE VIEWS AND CLONES")
-        results = pd.read_sql_query("Select sum(clones_uniques) as total_unique_clones, sum(views_uniques) as total_unique_views, min(timestamp) as from_date, max(timestamp) as to_date from  stats;", self.engine)
-        return results
+        results_wisdem = pd.read_sql_query("Select sum(clones_uniques) as total_unique_clones, sum(views_uniques) as total_unique_views, min(timestamp) as from_date, max(timestamp) as to_date from  stats;", self.engine)
+        results_floris = pd.read_sql_query("Select sum(clones_uniques) as total_unique_clones, sum(views_uniques) as total_unique_views, min(timestamp) as from_date, max(timestamp) as to_date from  statsnrelfloris;", self.engine)
+        results_wfctools = pd.read_sql_query("Select sum(clones_uniques) as total_unique_clones, sum(views_uniques) as total_unique_views, min(timestamp) as from_date, max(timestamp) as to_date from  statswfctools;", self.engine)
+        return results_wisdem, results_floris, results_wfctools
