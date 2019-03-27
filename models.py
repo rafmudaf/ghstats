@@ -41,3 +41,21 @@ class Stats(DeclarativeBase):
     clones_uniques = Column('clones_uniques', Integer)
     views_total = Column('views_total', Integer)
     views_uniques = Column('views_uniques', Integer)
+
+class StatsNRELFloris(DeclarativeBase):
+    """Sqlalchemy stats data model"""
+    __tablename__ = "statsnrelfloris"
+    timestamp = Column('timestamp', DateTime, primary_key=True, unique=True)
+    clones_total = Column('clones_total', Integer)
+    clones_uniques = Column('clones_uniques', Integer)
+    views_total = Column('views_total', Integer)
+    views_uniques = Column('views_uniques', Integer)
+
+class StatswfcTools(DeclarativeBase):
+    """Sqlalchemy stats data model"""
+    __tablename__ = "statswfctools"
+    timestamp = Column('timestamp', DateTime, primary_key=True, unique=True)
+    clones_total = Column('clones_total', Integer)
+    clones_uniques = Column('clones_uniques', Integer)
+    views_total = Column('views_total', Integer)
+    views_uniques = Column('views_uniques', Integer)

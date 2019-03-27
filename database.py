@@ -6,7 +6,7 @@ import pandas as pd
 
 # database connection
 import models as mod
-from models import Stats
+from models import Stats, StatsNRELFloris, StatswfcTools
 from sqlalchemy.orm import sessionmaker
 
 
@@ -38,14 +38,22 @@ class Database(object):
         # be careful with this one, it'll wipe out everything
         mod.recreate_all(self.engine)
 
-    def addClones(self, records):
+    def addClones(self, records, repo_code=None):
+        if (repo_code is None) or (repo_code is'wisdem_floris'):
+            repo_class = Stats
+        elif repo_code is 'nrel_floris':
+            repo_class = StatsNRELFloris
+        elif repo_code is 'wfc_tools':
+            repo_class = StatswfcTools
+
+
         for record in records:
             print(record)
             ts = record['timestamp'].split("T")[0]
-            stat = self.session.query(Stats).filter_by(timestamp=ts).first()
+            stat = self.session.query(repo_class).filter_by(timestamp=ts).first()
             if stat is None:
                 # insert
-                stat = Stats(timestamp=record['timestamp'].split("T")[0], clones_total=record['count'], clones_uniques=record['uniques'])
+                stat = repo_class(timestamp=record['timestamp'].split("T")[0], clones_total=record['count'], clones_uniques=record['uniques'])
             else:
                 # update
                 stat.clones_total = record['count']
@@ -55,14 +63,21 @@ class Database(object):
 
         self.session.commit()
 
-    def addViews(self, records):
+    def addViews(self, records, repo_code=None):
+        if (repo_code is None) or (repo_code is'wisdem_floris'):
+            repo_class = Stats
+        elif repo_code is 'nrel_floris':
+            repo_class = StatsNRELFloris
+        elif repo_code is 'wfc_tools':
+            repo_class = StatswfcTools
+
         for record in records:
             print(record)
             ts = record['timestamp'].split("T")[0]
-            stat = self.session.query(Stats).filter_by(timestamp=ts).first()
+            stat = self.session.query(repo_class).filter_by(timestamp=ts).first()
             if stat is None:
                 # insert
-                stat = Stats(timestamp=record['timestamp'].split("T")[0], views_total=record['count'], views_uniques=record['uniques'])
+                stat = repo_class(timestamp=record['timestamp'].split("T")[0], views_total=record['count'], views_uniques=record['uniques'])
             else:
                 # update
                 stat.views_total = record['count']
@@ -72,17 +87,25 @@ class Database(object):
 
         self.session.commit()
 
-    def getResults(self, from_date, to_date):
+    def getResults(self, from_date, to_date, repo_code=None):
+
+        if (repo_code is None) or (repo_code is'wisdem_floris'):
+            repo_class = Stats
+        elif repo_code is 'nrel_floris':
+            repo_class = StatsNRELFloris
+        elif repo_code is 'wfc_tools':
+            repo_class = StatswfcTools
+
         if from_date is None:
-            stat = self.session.query(Stats).order_by(Stats.timestamp).first()
+            stat = self.session.query(repo_class).order_by(repo_class.timestamp).first()
             if stat is not None:
                 from_date = stat.timestamp.strftime('%Y-%m-%d')
             else:
                 from_date = datetime.datetime.today().strftime('%Y-%m-%d')
         if to_date is None:
             to_date = datetime.datetime.today().strftime('%Y-%m-%d')
-        # records = self.session.query(Stats).all()
-        query = self.session.query(Stats).filter(Stats.timestamp <= to_date).filter(Stats.timestamp >= from_date)
+        # records = self.session.query(repo_class).all()
+        query = self.session.query(repo_class).filter(repo_class.timestamp <= to_date).filter(repo_class.timestamp >= from_date)
         # convert to list of dicts
         results = [u.__dict__ for u in query.all()]
         # remove unnecessary "sa_instance_state" and convert timestamp
